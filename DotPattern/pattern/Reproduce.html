@@ -1,0 +1,38 @@
+{{ block title }}
+    Page title
+{{ endblock }}
+{{ block content }}
+
+    <div id="grid", style="display: flex; flex-direction: column;">
+        {% for _ in range(10) %}
+            <div style="display: flex;">
+                {% for _ in range(10) %}
+                    <div class="square", style="width: 20px; height: 20px; border: 1px solid black; background-color: white; margin: 1px;"></div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+        
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const squares = document.querySelectorAll(".square");
+
+            squares.forEach(square => {
+                square.addEventListener("click", function() {
+                    if (square.style.backgroundColor === "black") {
+                        square.style.backgroundColor = "white";
+                    } else {
+                        square.style.backgroundColor = "black";
+                    }
+                });
+            });
+        });
+    </script>
+
+
+{{ formfields }}
+{{ next_button }}
+
+{{ endblock }}
+
