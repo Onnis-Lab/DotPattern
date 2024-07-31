@@ -11,6 +11,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
     PATTERN_SIZE = 10
+    N_DOTS = 10
 
 
 class Subsession(BaseSubsession):
@@ -32,7 +33,7 @@ class PatternDisplay(Page):
     # form_fields = ['pattern']
 
     def vars_for_template(self):
-        random_pattern = get_pattern(C.PATTERN_SIZE)
+        random_pattern = get_pattern(C.PATTERN_SIZE, C.N_DOTS)
         return {
             'matrix': random_pattern.tolist(),
         }
@@ -47,14 +48,11 @@ class Reproduce(Page):
         return 
     
 
-
-
 class ResultsWaitPage(WaitPage):
     pass
 
 
 class Results(Page):
     pass
-
 
 page_sequence = [PatternDisplay, Reproduce, ResultsWaitPage, Results]

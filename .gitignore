@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 this/*
+/DotPattern/Simulation/plots
