@@ -1,38 +1,88 @@
-{{ block title }}
-    Page title
+{{ block title }} 
+    Reproduce the Pattern
 {{ endblock }}
+
 {{ block content }}
 
-    <div id="grid", style="display: flex; flex-direction: column;">
-        {% for _ in range(10) %}
+<!-- Form element to wrap the content that needs to be submitted -->
+<form method="post">
+    <div id="grid" style="display: flex; flex-direction: column;">
+        {% for row in pattern_size %}
             <div style="display: flex;">
-                {% for _ in range(10) %}
-                    <div class="square", style="width: 50px; height: 50px; border: 1px solid black; background-color: white; margin: 1px;"></div>
+                {% for col in pattern_size %}
+                    <div class="square" data-position="{{ row }},{{ col }}" style="width: 50px; height: 50px; border: 1px solid black; background-color: white; margin: 1px; cursor: pointer;"></div>
                 {% endfor %}
             </div>
         {% endfor %}
     </div>
 
-        
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const squares = document.querySelectorAll(".square");
+    <!-- Hidden input field to store the pattern -->
+    <input type="hidden" id="reproduced_pattern" name="reproduced_pattern">
+    <button id="custom-next-button" type="button" disabled>Next</button>
+</form>
 
-            squares.forEach(square => {
-                square.addEventListener("click", function() {
-                    if (square.style.backgroundColor === "black") {
-                        square.style.backgroundColor = "white";
-                    } else {
-                        square.style.backgroundColor = "black";
-                    }
-                });
+<div>
+    n_dots: {{ n_dots }}
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const sizeValue = {{ size_value }};
+        const dotsRequired = {{ n_dots }};
+        const totalSquares = sizeValue * sizeValue;
+        let reproducedPattern = new Array(totalSquares).fill(0);  
+        let dotsSelected = 0;
+
+        const squares = document.querySelectorAll(".square");
+        const nextButton = document.getElementById('custom-next-button');
+        const form = document.querySelector('form'); // Select the form element
+
+        if (nextButton) {
+            nextButton.disabled = true;  // Disable the button initially
+            console.log("nextButton ok")
+        }
+        else {
+            console.error("nextButton not found")
+        }
+
+        squares.forEach(square => {
+            square.addEventListener("click", function() {
+                const position = square.getAttribute('data-position');
+                const [row, col] = position.split(',').map(Number);
+                const index = row * sizeValue + col;
+
+                if (square.style.backgroundColor === "black") {
+                    square.style.backgroundColor = "white";
+                    reproducedPattern[index] = 0;
+                    dotsSelected--;
+                } else {
+                    square.style.backgroundColor = "black";
+                    reproducedPattern[index] = 1;
+                    dotsSelected++;
+                }
+
+                // Update the hidden input field
+                document.getElementById("reproduced_pattern").value = reproducedPattern.join(',');
+
+                // Enable/disable the next button
+                nextButton.disabled = dotsSelected !== dotsRequired;
             });
         });
-    </script>
 
+        // Handle form submission when the custom button is clicked
+        nextButton.addEventListener("click", function() {
+            if (dotsSelected === dotsRequired) {
+                // Submit the form
+                form.submit();
+            } else {
+                console.error("Conditions not met for form submission.");
+            }
+        });
 
-{{ formfields }}
-{{ next_button }}
+        // Initialize the hidden input field
+        document.getElementById("reproduced_pattern").value = reproducedPattern.join(',');
+    });
+</script>
 
+<!-- {{ next_button }} -->
 {{ endblock }}
-
