@@ -24,7 +24,12 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     reproduced_pattern = models.StringField()  # To store the pattern as a string
-
+    selected_color = models.StringField(
+        initial='#000000',
+        label="Choose your pattern color:",
+        
+    )
+    # selected_color = models.StringField(initial="#000000", label="Choose your pattern color:")
 
 # FUNCTIONS
 def set_random_pattern(player):
@@ -53,7 +58,14 @@ def get_comparison_results(player):
 
 # PAGES
 class Instructions(Page):
-    pass 
+    form_model = 'player'
+    form_fields = ['selected_color']
+
+    # @staticmethod
+    # def vars_for_template(player):
+    #     return {
+    #         'default_color': player.selected_color  # Pass the default or previously selected color
+    #     }
 
 class PatternDisplay(Page):
     @staticmethod
@@ -61,6 +73,7 @@ class PatternDisplay(Page):
         matrix = set_random_pattern(player)
         return {
             'matrix': matrix.tolist(),
+            'selected_color': player.selected_color 
         }
 
 class Reproduce(Page):
@@ -73,7 +86,8 @@ class Reproduce(Page):
         return {
             'pattern_size': range(size),
             'size_value': size,
-            'n_dots': C.N_DOTS
+            'n_dots': C.N_DOTS,
+            'selected_color': player.selected_color
         }
 
     @staticmethod
@@ -89,7 +103,8 @@ class Results(Page):
         return {
             'accuracy': correctness,
             'original_pattern': original_pattern.tolist(),
-            'reproduced_pattern': reproduced_pattern.tolist()
+            'reproduced_pattern': reproduced_pattern.tolist(),
+            'selected_color': player.selected_color
         }
 
 

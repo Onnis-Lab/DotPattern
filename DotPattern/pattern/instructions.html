@@ -6,9 +6,17 @@
 
 <p>I den neste oppgaven skal du lage et mønster ved å klikke på ruter i et rutenett.</p>
 <p>Se nøye på mønsteret du får se, for du må huske det for å lage det på riktig måte.</p>
-<p>Når du er klar, trykk på "Neste" for å begynne oppgaven.</p>
+<p>Når du er klar, trykk på "Next" for å begynne oppgaven.</p>
 
-<!-- Add any additional instructions or images here -->
+<p>Velg den fargen du liker best for mønsteret før vi går videre:</p>
+
+<!-- Include jscolor library -->
+<script src="https://jscolor.com/release/2.4.5/jscolor.js"></script>
+
+<!-- Color picker input tied to the player's form field -->
+<input class="jscolor" id="colorPicker" name="selected_color" value="{{ player.selected_color }}" />
+
+<p>Etter å ha valgt farge, klikk "Next" for å fortsette.</p>
 
 {{ next_button }}
 

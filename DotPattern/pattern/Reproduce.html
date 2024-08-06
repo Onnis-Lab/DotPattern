@@ -5,6 +5,7 @@
 {{ block content }}
 
 <!-- Form element to wrap the content that needs to be submitted -->
+ 
 <form method="post">
     <div id="grid" style="display: flex; flex-direction: column;">
         {% for row in pattern_size %}
@@ -22,67 +23,82 @@
 </form>
 
 <div>
-    n_dots: {{ n_dots }}
+    Du må ha {{ n_dots}} ruter før du kan trykke <b>"Next"</b>.
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const sizeValue = {{ size_value }};
-        const dotsRequired = {{ n_dots }};
-        const totalSquares = sizeValue * sizeValue;
-        let reproducedPattern = new Array(totalSquares).fill(0);  
-        let dotsSelected = 0;
+    const sizeValue = {{ size_value }};
+    const dotsRequired = {{ n_dots }};
+    const totalSquares = sizeValue * sizeValue;
+    let reproducedPattern = new Array(totalSquares).fill(0);  
+    let dotsSelected = 0;
 
-        const squares = document.querySelectorAll(".square");
-        const nextButton = document.getElementById('custom-next-button');
-        const form = document.querySelector('form'); // Select the form element
+    const squares = document.querySelectorAll(".square");
+    const nextButton = document.getElementById('custom-next-button');
+    const form = document.querySelector('form'); 
+    const selectedColor = "{{ selected_color }}";
 
-        if (nextButton) {
-            nextButton.disabled = true;  // Disable the button initially
-            console.log("nextButton ok")
-        }
-        else {
-            console.error("nextButton not found")
-        }
+    if (nextButton) {
+        nextButton.disabled = true;  // Disable the button initially
+        console.log("nextButton ok");
+    } else {
+        console.error("nextButton not found");
+    }
 
-        squares.forEach(square => {
-            square.addEventListener("click", function() {
-                const position = square.getAttribute('data-position');
-                const [row, col] = position.split(',').map(Number);
-                const index = row * sizeValue + col;
+    // Function to convert hex color to rgb format
+    function hexToRgb(hex) {
+        const bigint = parseInt(hex.slice(1), 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgb(${r}, ${g}, ${b})`;
+    }
 
-                if (square.style.backgroundColor === "black") {
-                    square.style.backgroundColor = "white";
-                    reproducedPattern[index] = 0;
-                    dotsSelected--;
-                } else {
-                    square.style.backgroundColor = "black";
-                    reproducedPattern[index] = 1;
-                    dotsSelected++;
-                }
+    // Convert selectedColor to rgb format for comparison
+    const selectedColorRgb = hexToRgb(selectedColor);
 
-                // Update the hidden input field
-                document.getElementById("reproduced_pattern").value = reproducedPattern.join(',');
+    squares.forEach(square => {
+        square.addEventListener("click", function() {
+            const position = square.getAttribute('data-position');
+            const [row, col] = position.split(',').map(Number);
+            const index = row * sizeValue + col;
 
-                // Enable/disable the next button
-                nextButton.disabled = dotsSelected !== dotsRequired;
-            });
-        });
+            // Get the current background color of the square in rgb format
+            const currentColor = window.getComputedStyle(square).backgroundColor;
 
-        // Handle form submission when the custom button is clicked
-        nextButton.addEventListener("click", function() {
-            if (dotsSelected === dotsRequired) {
-                // Submit the form
-                form.submit();
+            // Toggle the square's color based on current color
+            if (currentColor === selectedColorRgb) {
+                square.style.backgroundColor = "white";
+                reproducedPattern[index] = 0;
+                dotsSelected--;
             } else {
-                console.error("Conditions not met for form submission.");
+                square.style.backgroundColor = selectedColor;
+                reproducedPattern[index] = 1;
+                dotsSelected++;
             }
-        });
 
-        // Initialize the hidden input field
-        document.getElementById("reproduced_pattern").value = reproducedPattern.join(',');
+            // Update the hidden input field
+            document.getElementById("reproduced_pattern").value = reproducedPattern.join(',');
+
+            // Enable/disable the next button
+            nextButton.disabled = dotsSelected !== dotsRequired;
+        });
+    });
+
+    // Handle form submission when the custom button is clicked
+    nextButton.addEventListener("click", function() {
+        if (dotsSelected === dotsRequired) {
+            // Submit the form
+            form.submit();
+        } else {
+            console.error("Conditions not met for form submission.");
+        }
+    });
+
+    // Initialize the hidden input field
+    document.getElementById("reproduced_pattern").value = reproducedPattern.join(',');
     });
 </script>
 
-<!-- {{ next_button }} -->
 {{ endblock }}
