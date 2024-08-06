@@ -3,7 +3,7 @@ import random
 
 def get_pattern(size, n_dots):
 	'''Generates a random matrix of n times n'''
-	seed_pattern = np.zeros((size,size)) 
+	seed_pattern = np.zeros((size,size), dtype=int) 
 	grid_numbers = list(range(size**2))
 
 	chosen_numbers = random.sample(grid_numbers, n_dots)
@@ -28,7 +28,7 @@ def compare_patterns(A, B):
 				if A[i, j] == B[i, j]:
 					n_correct += 1
 
-	return n_correct / n_dots
+	return n_correct
 
 
 if __name__ == '__main__':
