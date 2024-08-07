@@ -11,8 +11,8 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
     PATTERN_SIZE = 10
-    N_DOTS = 10
-    TEST_MATRIX = np.array([[1, 0, 0], [0, 1, 1], [0, 0, 0]])
+    N_DOTS = 12
+    TEST_MATRIX = np.array([[1, 0, 1], [0, 1, 1], [0, 0, 0]])
 
 
 class Subsession(BaseSubsession):
@@ -122,7 +122,7 @@ class TrialDisplay(Page):
             'selected_color': player.selected_color 
         }
     
-class TrialReproduce(Page):
+class Trial(Page):
     form_model = 'player'
     form_fields = ['reproduced_pattern']
 
@@ -130,15 +130,17 @@ class TrialReproduce(Page):
     def vars_for_template(player):
         size = 3
         return {
-            'pattern_size': range(3),
-            'size_value': 3,
-            'n_dots': 3,
+            'matrix': C.TEST_MATRIX.tolist(),
+            'flat_matrix': C.TEST_MATRIX.flatten().tolist(),
+            'pattern_size': range(size),
+            'size_value': size,
+            'n_dots': 4,
             'selected_color': player.selected_color
         }
 
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        reproduced_pattern = player.reproduced_pattern.split(',')
+    # @staticmethod
+    # def before_next_page(player, timeout_happened):
+    #     reproduced_pattern = player.reproduced_pattern.split(',')
 
 class NowYouAreReady(Page):
     @staticmethod
@@ -151,8 +153,8 @@ class NowYouAreReady(Page):
             'original_pattern': original_pattern.tolist(),
             'reproduced_pattern': reproduced_pattern.tolist(),
             'selected_color': player.selected_color,
-            "n_dots": 3
+            "n_dots": 4
         }
 
 
-page_sequence = [Instructions, TrialDisplay, TrialReproduce, NowYouAreReady, PatternDisplay, Reproduce, Results]
+page_sequence = [Instructions, Trial, PatternDisplay, Reproduce, Results]
