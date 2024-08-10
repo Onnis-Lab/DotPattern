@@ -73,6 +73,7 @@ class Instructions(Page):
     #     }
 
 class PatternDisplay(Page):
+    timeout_seconds = 10 # Seconds
     @staticmethod
     def vars_for_template(player):
         matrix = set_random_pattern(player)
@@ -92,7 +93,7 @@ class Reproduce(Page):
             'pattern_size': range(size),
             'size_value': size,
             'n_dots': C.N_DOTS,
-            'selected_color': player.selected_color
+            'selected_color': player.selected_color,
         }
 
     @staticmethod
