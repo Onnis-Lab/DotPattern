@@ -1,0 +1,10 @@
+{% block content %}
+{% load static %}
+    <div style="text-align: center;">
+        <h2>Here are some random lines:</h2>
+        <div>
+            <img src="{% static 'global/random_lines.png' %}" alt="Random Lines" style="max-width: 100%; height: auto;">
+        </div>
+        <!-- <p>The page will automatically move to the next step in 10 seconds.</p> -->
+    </div>
+{% endblock %}

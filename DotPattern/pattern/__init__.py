@@ -113,15 +113,7 @@ class Results(Page):
             "n_dots": C.N_DOTS
         }
 
-# for teaching purposes
-class TrialDisplay(Page):
-    @staticmethod
-    def vars_for_template(player):
-        return {
-            'matrix': C.TEST_MATRIX.tolist(),
-            'selected_color': player.selected_color 
-        }
-    
+
 class Trial(Page):
     form_model = 'player'
     form_fields = ['reproduced_pattern']
@@ -138,23 +130,12 @@ class Trial(Page):
             'selected_color': player.selected_color
         }
 
-    # @staticmethod
-    # def before_next_page(player, timeout_happened):
-    #     reproduced_pattern = player.reproduced_pattern.split(',')
-
-class NowYouAreReady(Page):
+class RandomLines(Page):  
+    timeout_seconds = 10 
     @staticmethod
-    def vars_for_template(player):
-        original_pattern = C.TEST_MATRIX
-        reproduced_pattern, _ = store_reproduced_pattern(player, ori_pattern=C.TEST_MATRIX)
-        correctness = compare_patterns(original_pattern, reproduced_pattern)
-        return {
-            'accuracy': correctness,
-            'original_pattern': original_pattern.tolist(),
-            'reproduced_pattern': reproduced_pattern.tolist(),
-            'selected_color': player.selected_color,
-            "n_dots": 4
-        }
+    def before_next_page(player, timeout_happened):
+        if timeout_happened:
+            return
 
 
-page_sequence = [Instructions, Trial, PatternDisplay, Reproduce, Results]
+page_sequence = [Instructions, Trial, PatternDisplay, RandomLines, Reproduce, Results]
