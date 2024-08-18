@@ -31,6 +31,31 @@ def compare_patterns(A, B):
 	return n_correct
 
 
+def distribute_patterns(curr_patterns, sequence_next_round):
+	"""
+	given the sequence for the next round, distribute the patterns"""
+	next_patterns = curr_patterns[np.argsort(sequence_next_round)]
+
+	return next_patterns
+
+def seed_patterns(n, size, dots):
+	"""Generate n random seeds
+	args:
+		n: the number of patterns to generate;
+		size: the grid size of the pattern, will be size x size;
+		dots: the number of 1's in the pattern
+ 
+	returns:
+		patterns: a list of n random patterns
+	"""
+
+	patterns = []
+	for _ in range(n):
+		patterns.append(get_pattern(size,dots))
+	
+	return patterns
+	
+		
 if __name__ == '__main__':
 	A = get_pattern(10, 12)
 	B = get_pattern(10, 12)

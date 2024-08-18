@@ -4,7 +4,7 @@ SESSION_CONFIGS = [
     dict(
         name='pattern',
         app_sequence=['pattern'],
-        num_demo_participants=1,
+        num_demo_participants=3,
     ),
 ]
 
@@ -17,7 +17,7 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc=""
 )
 
-PARTICIPANT_FIELDS = []
+PARTICIPANT_FIELDS = ['selected_color']
 SESSION_FIELDS = []
 
 # ISO-639 code
