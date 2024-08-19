@@ -2,8 +2,8 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import random
-# from network.helper_classes import Scheduler 
-from helper_classes import Scheduler 
+from network.helper_classes import Scheduler 
+# from helper_classes import Scheduler 
 
 '''
 Contains functions for creating networks and matchmaking algorithms. 
