@@ -40,7 +40,7 @@ class C(BaseConstants):
     
     INITIAL_PATTERNS = seed_patterns(N_PARTICIPANTS, PATTERN_SIZE, N_DOTS)
 
-    SEQUENCES = random_game_sequences  # or ws_game_sequences
+    SEQUENCES = ws_game_sequences  # or random_game_sequences
     NUM_ROUNDS = len(SEQUENCES)
     print(SEQUENCES)
     print(INITIAL_PATTERNS)
