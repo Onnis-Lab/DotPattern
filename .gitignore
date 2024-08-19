@@ -161,3 +161,4 @@ cython_debug/
 
 this/*
 /DotPattern/Simulation/plots
+.DS_Store
