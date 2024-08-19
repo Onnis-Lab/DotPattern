@@ -6,6 +6,7 @@ import numpy as np
 NO_AVAILABLE_NEIGHBOUR = -1
 END_OF_GAME = -2
 
+
 class Scheduler:
 
     def __init__(self, graph, n_rounds):
@@ -41,7 +42,7 @@ class Scheduler:
         assert round >= 0 
         if round == 0:
             return self.sequences[round, i]
-        new_node = self.sequences[round - 1, i]
+        new_node = self.sequences[round, i]
         if new_node >= 0:
             return new_node
         else:
@@ -64,7 +65,8 @@ class Scheduler:
                     end_game_counter += 1
                     continue
                 if node == NO_AVAILABLE_NEIGHBOUR:
-                    node = self._find_last_non_negative(i, round - 2)
+                    node = self._find_last_non_negative(i, round - 1)
+                    print(f"new non-negative node: {node}")
                 neighbour = self.find_an_available_neighbour(node, round_participants)
                 if neighbour is not None:
                     round_participants.add(neighbour)
@@ -88,17 +90,6 @@ class Scheduler:
 
     def get_paths(self):
         return self.sequences.T
-
-
-
-class PatternManager:
-    
-    def __init__(self, pattern_dict):
-
-        """
-        args: patterns: dictionary,  key: int, node index, value: 2d-array, initial pattern
-        """
-
 
             
 

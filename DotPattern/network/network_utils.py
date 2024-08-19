@@ -2,7 +2,9 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import random
-from network.helper_classes import Scheduler 
+# from network.helper_classes import Scheduler 
+from helper_classes import Scheduler 
+
 '''
 Contains functions for creating networks and matchmaking algorithms. 
 '''
@@ -11,10 +13,10 @@ random.seed(375)
 
 # NETWORK
 N_NEIGHBORS = 2
-N_NODES = 3
+N_NODES = 6
 
 # GAME
-MAX_ROUNDS = 10  
+MAX_ROUNDS = 10
 
 
 # WATTS-STROGATZ NETWORK
@@ -59,11 +61,11 @@ random_G = nx.random_regular_graph(N_NEIGHBORS, N_NODES)
 ws_G = nx.watts_strogatz_graph(N_NODES, N_NEIGHBORS, P_REWIRE)
 pos = to_ring(N_NODES)
 
-random_scheduler = Scheduler(random_G, 10)
+random_scheduler = Scheduler(random_G, MAX_ROUNDS)
 random_game_sequences = random_scheduler.get_sequences_for_game()
 
-ws_scheduler = Scheduler(ws_G, 10)
-ws_game_sequences = ws_scheduler.get_sequences_for_game()
+# ws_scheduler = Scheduler(ws_G, MAX_ROUNDS)
+# ws_game_sequences = ws_scheduler.get_sequences_for_game()
 
 
 if __name__ == '__main__':
@@ -82,7 +84,15 @@ if __name__ == '__main__':
     
     paths = random_scheduler.get_paths()
 
-    # print(game_sequences)
-    for path in paths:
-        print(f"Pattern {int(path[0])} goes through {path}")
+    print(random_game_sequences)
+    # for path in paths:
+    #     # print(f"random \n\n\n\n")
+    #     print(f"Pattern {int(path[0])} goes through {path}")
+        # print(f"Number of nodes {len(set(path))}.")
 
+    # ws_paths = ws_scheduler.get_paths()
+    # print(ws_game_sequences) 
+    # print(f"ws \n\n\n\n")
+    # for path in ws_paths:
+    #     print(f"Pattern {int(path[0])} goes through {path}")
+        # print(f"Number of nodes {len(set(path))}.")
