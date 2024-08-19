@@ -2,9 +2,9 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='pattern',
+        name='Pattern',
         app_sequence=['pattern'],
-        num_demo_participants=4,
+        num_demo_participants=3,
     ),
 ]
 

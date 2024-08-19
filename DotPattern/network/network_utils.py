@@ -9,14 +9,14 @@ from network.helper_classes import Scheduler
 Contains functions for creating networks and matchmaking algorithms. 
 '''
 
-random.seed(375)
+random.seed(7)
 
 # NETWORK
-N_NEIGHBORS = 2
-N_NODES = 4
+N_NEIGHBORS = 4
+N_NODES = 10
 
 # GAME
-MAX_ROUNDS = 10
+MAX_ROUNDS = 3
 
 
 # WATTS-STROGATZ NETWORK

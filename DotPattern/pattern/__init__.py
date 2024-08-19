@@ -10,7 +10,7 @@ Depending on that, change the SEQUENCES defined below in the constant (C) class.
 """
 
 ###### Change Here Before Releasing #######
-DEBUG = True
+DEBUG = False
 #############
 
 
@@ -18,11 +18,14 @@ class C(BaseConstants):
     NAME_IN_URL = 'pattern'
     PLAYERS_PER_GROUP = None
     TEST_MATRIX = np.array([[1, 0, 1], [0, 1, 1], [0, 0, 0]])
+    TEST_MATRIX2 = np.array([[0, 1, 1], [0, 0, 1], [0, 1, 0]])
+    TEST_MATRIX3 = np.array([[0, 0, 0], [0, 1, 1], [1, 1, 0]])
+
     
     if DEBUG:
         PATTERN_SIZE = 3 
         N_DOTS = 3
-        N_PARTICIPANTS = 4
+        N_PARTICIPANTS = 3
         PATTERN_DISPLAY_TIME = 3
         REPRODUCE_TIME = 5
         NOODLE_TIME = 1
@@ -41,7 +44,6 @@ class C(BaseConstants):
     NUM_ROUNDS = len(SEQUENCES)
     print(SEQUENCES)
     print(INITIAL_PATTERNS)
-
 
 class Subsession(BaseSubsession):
 
@@ -64,7 +66,7 @@ class Subsession(BaseSubsession):
         for player in self.get_players():  # players for this round
             print(f"Player {player.id_in_group} is being assigned a new pattern")
             sequence_value = C.SEQUENCES[self.round_number - 2][player.id_in_group - 1]  # Adjust the indexing
-            print(f"Round {self.round_number}: Player {player.id_in_group} is getting the pattern from {int(sequence_value)}")
+            print(f"Round {self.round_number}: Player {player.id_in_group} is getting the pattern from Player {int(sequence_value) + 1}")
 
             if sequence_value == -1:
                 player.should_wait = True
@@ -81,7 +83,7 @@ class Subsession(BaseSubsession):
                 # Loop backwards through rounds until a valid pattern is found or we reach the first round
                 while previous_round > 0:
                     previous_round_players = self.in_round(previous_round).get_players()
-                    previous_pattern = previous_round_players[int(sequence_value)].field_maybe_none('reproduced_pattern')
+                    previous_pattern = previous_round_players[int(sequence_value) + 1].field_maybe_none('reproduced_pattern')
 
                     if previous_pattern is not None:
                         player.assigned_pattern = previous_pattern
@@ -101,8 +103,8 @@ class Subsession(BaseSubsession):
 
 def creating_session(subsession: Subsession):
     if subsession.round_number == 1:
-        for player in subsession.get_players():
-            player.participant.selected_color = '#000000'
+        # for player in subsession.get_players():
+        #     player.participant.selected_color = '#000000'
         subsession.assign_patterns()
                     
                 
@@ -174,7 +176,7 @@ class Instructions(Page):
         return player.round_number == 1
     
     @staticmethod
-    def before_next_page(player: Player):
+    def before_next_page(player: Player, timeout_happened):
         player.participant.selected_color = player.selected_color
 
 class WaitforRound(WaitPage):
@@ -189,12 +191,9 @@ class WaitforRound(WaitPage):
     @staticmethod
     def vars_for_template(player):
         return {
-            'message': f"Please wait {player.rounds_to_wait} round(s) before your next game.",
+            'message': f"Vennligst vent {player.rounds_to_wait }runde(r) før neste kamp.",
             'wait_time': player.rounds_to_wait * 70
         }
-
-    title_text = "Please Wait"
-    body_text = "You will be able to continue in a few moments."
 
 class PatternDisplay(Page):
     timeout_seconds = C.PATTERN_DISPLAY_TIME  # Seconds
@@ -271,6 +270,8 @@ class Trial(Page):
     
     def is_displayed(player: Player):
         return player.round_number == 1
+    
+
 
 class RandomLines(Page):
     timeout_seconds = C.NOODLE_TIME
@@ -297,7 +298,7 @@ class ShuffleWaitPage(WaitPage):
 class GameOver(Page):
     @staticmethod
     def is_displayed(player):
-        return player.game_over
+        return player.round_number == C.NUM_ROUNDS
 
     
 page_sequence = [
@@ -311,5 +312,4 @@ page_sequence = [
     Reproduce,
     Results,
     GameOver,  
-
 ]
