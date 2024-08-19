@@ -64,8 +64,8 @@ pos = to_ring(N_NODES)
 random_scheduler = Scheduler(random_G, MAX_ROUNDS)
 random_game_sequences = random_scheduler.get_sequences_for_game()
 
-# ws_scheduler = Scheduler(ws_G, MAX_ROUNDS)
-# ws_game_sequences = ws_scheduler.get_sequences_for_game()
+ws_scheduler = Scheduler(ws_G, MAX_ROUNDS)
+ws_game_sequences = ws_scheduler.get_sequences_for_game()
 
 
 if __name__ == '__main__':
