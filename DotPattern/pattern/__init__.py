@@ -174,7 +174,7 @@ class Instructions(Page):
         return player.round_number == 1
     
     @staticmethod
-    def before_next_page(player: Player, timeout_happened):
+    def before_next_page(player: Player):
         player.participant.selected_color = player.selected_color
 
 class WaitforRound(WaitPage):
@@ -266,7 +266,7 @@ class Trial(Page):
             'pattern_size': range(size),
             'size_value': size,
             'n_dots': 4,
-            'selected_color': player.selected_color
+            'selected_color': player.participant.selected_color
         }
     
     def is_displayed(player: Player):
