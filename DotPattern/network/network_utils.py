@@ -13,7 +13,7 @@ random.seed(375)
 
 # NETWORK
 N_NEIGHBORS = 2
-N_NODES = 6
+N_NODES = 4
 
 # GAME
 MAX_ROUNDS = 10

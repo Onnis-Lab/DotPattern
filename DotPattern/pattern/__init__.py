@@ -22,7 +22,7 @@ class C(BaseConstants):
     if DEBUG:
         PATTERN_SIZE = 3 
         N_DOTS = 3
-        N_PARTICIPANTS = 3
+        N_PARTICIPANTS = 4
         PATTERN_DISPLAY_TIME = 3
         REPRODUCE_TIME = 5
         NOODLE_TIME = 1
