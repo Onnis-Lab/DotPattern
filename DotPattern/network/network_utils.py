@@ -12,11 +12,11 @@ Contains functions for creating networks and matchmaking algorithms.
 random.seed(7)
 
 # NETWORK
-N_NEIGHBORS = 4
-N_NODES = 10
+N_NEIGHBORS = 2
+N_NODES = 3
 
 # GAME
-MAX_ROUNDS = 10
+MAX_ROUNDS = 4
 
 
 # WATTS-STROGATZ NETWORK
