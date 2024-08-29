@@ -9,15 +9,14 @@ from network.helper_classes import Scheduler
 Contains functions for creating networks and matchmaking algorithms. 
 '''
 
-random.seed(7)
+random.seed(4567)
 
 # NETWORK
 N_NEIGHBORS = 2
 N_NODES = 3
 
 # GAME
-MAX_ROUNDS = 10
-
+MAX_ROUNDS = 4
 
 
 # WATTS-STROGATZ NETWORK
@@ -83,9 +82,10 @@ if __name__ == '__main__':
     # print(random_patterns)
 
     
-    paths = random_scheduler.get_paths()
+    # paths = random_scheduler.get_paths()
 
     print(random_game_sequences)
+    print(ws_game_sequences)
     # for path in paths:
     #     # print(f"random \n\n\n\n")
     #     print(f"Pattern {int(path[0])} goes through {path}")

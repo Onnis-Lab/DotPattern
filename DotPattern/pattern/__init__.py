@@ -9,10 +9,10 @@ Choose whether the experiment should be run on the random or the watts-strogatz 
 Depending on that, change the SEQUENCES defined below in the constant (C) class.
 """
 
-###### Change Here Before Releasing #######
-DEBUG = False
+###### Change to TRUE before releasing #######
+DEBUG = True
 #############
-
+IS_WS = False
 
 class C(BaseConstants):
     NAME_IN_URL = 'pattern'
@@ -40,7 +40,11 @@ class C(BaseConstants):
     
     INITIAL_PATTERNS = seed_patterns(N_PARTICIPANTS, PATTERN_SIZE, N_DOTS)
 
-    SEQUENCES = ws_game_sequences  # or random_game_sequences
+    if IS_WS:
+        SEQUENCES = ws_game_sequences
+    else:
+        SEQUENCES = random_game_sequences
+
     NUM_ROUNDS = len(SEQUENCES)
     print(SEQUENCES)
     # print(INITIAL_PATTERNS)
@@ -65,7 +69,14 @@ class Subsession(BaseSubsession):
 
         for player in self.get_players():  # players for this round
             print(f"Player {player.id_in_group} is being assigned a new pattern")
-            sequence_value = C.SEQUENCES[self.round_number - 2][player.id_in_group - 1]  # Adjust the indexing
+            # get the index of the player with this id in this round
+            for i in range(len(C.SEQUENCES[self.round_number])):
+                if C.SEQUENCES[self.round_number - 1][i] == player.id_in_group - 1:
+                    player_index = i
+            # who should the player be getting the pattern from
+            sequence_value = C.SEQUENCES[self.round_number - 2][player_index]  # Adjust the indexing
+
+
             print(f"Round {self.round_number}: Player {player.id_in_group} is getting the pattern from Player {int(sequence_value) + 1}")
 
             if sequence_value == -1:
@@ -301,16 +312,27 @@ class GameOver(Page):
     def is_displayed(player):
         return player.round_number == C.NUM_ROUNDS
 
-    
-page_sequence = [
-    Instructions,
-    Trial,
-    WaitForStartGame,
-    ShuffleWaitPage,
-    WaitforRound,
-    PatternDisplay,
-    RandomLines, 
-    Reproduce,
-    Results,
-    GameOver,  
-]
+if DEBUG:
+    page_sequence = [
+        Instructions,
+        WaitForStartGame,
+        ShuffleWaitPage,
+        WaitforRound,
+        PatternDisplay,
+        Reproduce,
+        Results,
+        GameOver,  
+    ]
+else:
+    page_sequence = [
+        Instructions,
+        Trial,
+        WaitForStartGame,
+        ShuffleWaitPage,
+        WaitforRound,
+        PatternDisplay,
+        RandomLines, 
+        Reproduce,
+        Results,
+        GameOver,  
+    ]

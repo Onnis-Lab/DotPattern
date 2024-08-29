@@ -60,12 +60,13 @@ class Scheduler:
         round_participants = set()
         if round > 0:
             for i, node in enumerate(self.sequences[round - 1]):
+                node = int(node)
                 if self.count_paths(self.sequences[:, i]) == self.n_rounds:
                     sequence[i] = END_OF_GAME
                     end_game_counter += 1
                     continue
                 if node == NO_AVAILABLE_NEIGHBOUR:
-                    node = self._find_last_non_negative(i, round - 1)
+                    node = int(self._find_last_non_negative(i, round - 1))
                     # print(f"new non-negative node: {node}")
                 neighbour = self.find_an_available_neighbour(node, round_participants)
                 if neighbour is not None:
@@ -75,7 +76,6 @@ class Scheduler:
                     sequence[i] = NO_AVAILABLE_NEIGHBOUR # no available neighbour
             if end_game_counter < self.graph.number_of_nodes(): 
                 self.sequences = np.vstack([self.sequences, sequence])
-
         return end_game_counter == self.graph.number_of_nodes()
     
     def get_sequences_for_game(self):
