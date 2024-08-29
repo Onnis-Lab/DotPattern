@@ -66,7 +66,7 @@ class Scheduler:
                     continue
                 if node == NO_AVAILABLE_NEIGHBOUR:
                     node = self._find_last_non_negative(i, round - 1)
-                    print(f"new non-negative node: {node}")
+                    # print(f"new non-negative node: {node}")
                 neighbour = self.find_an_available_neighbour(node, round_participants)
                 if neighbour is not None:
                     round_participants.add(neighbour)

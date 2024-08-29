@@ -43,7 +43,7 @@ class C(BaseConstants):
     SEQUENCES = random_game_sequences  # or ws_game_sequences
     NUM_ROUNDS = len(SEQUENCES)
     print(SEQUENCES)
-    print(INITIAL_PATTERNS)
+    # print(INITIAL_PATTERNS)
 
 class Subsession(BaseSubsession):
 
@@ -83,7 +83,8 @@ class Subsession(BaseSubsession):
                 # Loop backwards through rounds until a valid pattern is found or we reach the first round
                 while previous_round > 0:
                     previous_round_players = self.in_round(previous_round).get_players()
-                    previous_pattern = previous_round_players[int(sequence_value) + 1].field_maybe_none('reproduced_pattern')
+                    print(sequence_value)
+                    previous_pattern = previous_round_players[int(sequence_value)].field_maybe_none('reproduced_pattern')
 
                     if previous_pattern is not None:
                         player.assigned_pattern = previous_pattern
