@@ -32,7 +32,7 @@ class C(BaseConstants):
     else:
         PATTERN_SIZE = 10
         N_DOTS = 12
-        N_PARTICIPANTS = 10
+        N_PARTICIPANTS = 16
         PATTERN_DISPLAY_TIME = 10
         REPRODUCE_TIME = 60
         NOODLE_TIME = 10
