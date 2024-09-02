@@ -8,9 +8,7 @@ from network.helper_classes import Scheduler
 Contains functions for creating networks and matchmaking algorithms. 
 '''
 
-
 random.seed(734)
-
 
 def to_ring(n):
     # Calculate polar coordinates for nodes for a ring layout

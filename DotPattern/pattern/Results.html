@@ -1,9 +1,9 @@
 {{ block title }}
-    Results
+    Resultater
 {{ endblock }}
 
 {{ block content }}
-The original pattern is
+Det originale mønsteret er
 <div style="display: flex; flex-direction: column;">
     {% for row in original_pattern %}
         <div style="display: flex;">
@@ -18,7 +18,8 @@ The original pattern is
     {% endfor %}
 </div>
 
-You made
+
+Du laget
 <div style="display: flex; flex-direction: column;">
     {% for row in reproduced_pattern %}
         <div style="display: flex;">
@@ -33,7 +34,7 @@ You made
     {% endfor %}
 </div>
 
-Your memory points: {{accuracy}} av {{n_dots}}.
+Din minnepoengsum: {{accuracy}} av {{n_dots}}.
 
 {{ next_button }}
 
