@@ -1,6 +1,6 @@
 from otree.api import *
 from pattern.pattern_utils import get_pattern, compare_patterns, seed_patterns
-from network.network_utils import random_game_sequences, ws_game_sequences
+from network.network_utils import generate_network_sequences
 import numpy as np
 import json
 
@@ -10,44 +10,42 @@ Depending on that, change the SEQUENCES defined below in the constant (C) class.
 """
 
 ###### Change to TRUE before releasing #######
-DEBUG = True
+DEBUG = False
 #############
-IS_WS = False
+
+######## Experiment Variables #########
+is_ws = False
+nodes = 8 # number of participants
+neighbours = 4
+max_rounds = 10
+########################################
 
 class C(BaseConstants):
     NAME_IN_URL = 'pattern'
     PLAYERS_PER_GROUP = None
     TEST_MATRIX = np.array([[1, 0, 1], [0, 1, 1], [0, 0, 0]])
-    TEST_MATRIX2 = np.array([[0, 1, 1], [0, 0, 1], [0, 1, 0]])
-    TEST_MATRIX3 = np.array([[0, 0, 0], [0, 1, 1], [1, 1, 0]])
 
-    
+    # Define default values for debug or production
     if DEBUG:
-        PATTERN_SIZE = 3 
+        PATTERN_SIZE = 3
         N_DOTS = 3
-        N_PARTICIPANTS = 3
         PATTERN_DISPLAY_TIME = 3
+        N_PARTICIPANTS = 4
         REPRODUCE_TIME = 5
         NOODLE_TIME = 1
     else:
         PATTERN_SIZE = 10
         N_DOTS = 12
-        N_PARTICIPANTS = 16
         PATTERN_DISPLAY_TIME = 10
         REPRODUCE_TIME = 60
         NOODLE_TIME = 10
 
-    
-    INITIAL_PATTERNS = seed_patterns(N_PARTICIPANTS, PATTERN_SIZE, N_DOTS)
-
-    if IS_WS:
-        SEQUENCES = ws_game_sequences
-    else:
-        SEQUENCES = random_game_sequences
-
-    NUM_ROUNDS = len(SEQUENCES)
+    INITIAL_PATTERNS = seed_patterns(nodes, PATTERN_SIZE, N_DOTS)
+    SEQUENCES = generate_network_sequences(is_ws, nodes, neighbours, max_rounds)
+    # print(SEQUENCES[1:].flatten())
     print(SEQUENCES)
-    # print(INITIAL_PATTERNS)
+    NUM_ROUNDS = len(SEQUENCES)
+
 
 class Subsession(BaseSubsession):
 
@@ -69,25 +67,23 @@ class Subsession(BaseSubsession):
 
         for player in self.get_players():  # players for this round
             print(f"Player {player.id_in_group} is being assigned a new pattern")
-            # get the index of the player with this id in this round
-            for i in range(len(C.SEQUENCES[self.round_number])):
-                if C.SEQUENCES[self.round_number - 1][i] == player.id_in_group - 1:
-                    player_index = i
-            # who should the player be getting the pattern from
-            sequence_value = C.SEQUENCES[self.round_number - 2][player_index]  # Adjust the indexing
-
-
-            print(f"Round {self.round_number}: Player {player.id_in_group} is getting the pattern from Player {int(sequence_value) + 1}")
-
-            if sequence_value == -1:
+            if player.id_in_group - 1 not in C.SEQUENCES[self.round_number - 1]:
                 player.should_wait = True
                 player.rounds_to_wait += 1
-                print(f"Player {player.id_in_group} should wait for {player.rounds_to_wait} rounds")
-            elif sequence_value == -2:
-                player.should_wait = False
-                player.game_over = True
-                print(f"Player {player.id_in_group} is done")
+                if player.id_in_group - 1 not in C.SEQUENCES[self.round_number - 1:].flatten():
+                    player.should_wait = False
+                    player.game_over = True
+                    print(f"Player {player.id_in_group} is done")
             else:
+                # get the index of the player with this id in this round
+                for i in range(len(C.SEQUENCES[self.round_number - 1])):
+                    if C.SEQUENCES[self.round_number - 1][i] == player.id_in_group - 1:
+                        player_index = i
+                # who should the player be getting the pattern from, of the previous rounds
+                sequence_value = C.SEQUENCES[self.round_number - 2][player_index]  # Adjust the indexing
+
+                print(f"Round {self.round_number}: Player {player.id_in_group} is getting the pattern from Player {int(sequence_value) + 1}")
+
                 previous_round = self.round_number - 1
                 previous_pattern = None
 
@@ -114,11 +110,10 @@ class Subsession(BaseSubsession):
                 player.rounds_to_wait = 0  # Reset if they are playing`
 
 def creating_session(subsession: Subsession):
+    print(f"Hi! {subsession.round_number}")
+
     if subsession.round_number == 1:
-        # for player in subsession.get_players():
-        #     player.participant.selected_color = '#000000'
-        subsession.assign_patterns()
-                    
+        subsession.assign_patterns() 
                 
 class Group(BaseGroup):
     pass
@@ -221,7 +216,7 @@ class PatternDisplay(Page):
     
     @staticmethod
     def is_displayed(player: Player):
-        return not player.should_wait
+        return not (player.should_wait or player.game_over)
 
 
 class Reproduce(Page):
@@ -246,7 +241,7 @@ class Reproduce(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return not player.should_wait
+        return not (player.should_wait or player.game_over)
     
 class Results(Page):
     @staticmethod
@@ -262,7 +257,7 @@ class Results(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return not player.should_wait
+        return not (player.should_wait or player.game_over)
 
 class Trial(Page):
     form_model = 'player'
@@ -300,7 +295,7 @@ class ShuffleWaitPage(WaitPage):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number > 1
+        return player.round_number > 1 
     
     @staticmethod
     def after_all_players_arrive(subsession: Subsession):

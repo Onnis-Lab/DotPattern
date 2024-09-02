@@ -18,7 +18,7 @@ class Scheduler:
         self.graph = graph 
         self.n_rounds = n_rounds
 
-        self.sequences = np.empty((0, graph.number_of_nodes()))
+        self.sequences = np.empty((0, graph.number_of_nodes()), dtype=np.int_)
         self.sequences = np.vstack([self.sequences, np.arange(graph.number_of_nodes())]) # round 0, everyone gets an initial pattern
 
     def find_an_available_neighbour(self, node, round_participants):
