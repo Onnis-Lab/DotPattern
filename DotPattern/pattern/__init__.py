@@ -14,7 +14,7 @@ DEBUG = False
 #############
 
 ######## Experiment Variables #########
-is_ws = False
+is_ws = True
 nodes = 8 # number of participants
 neighbours = 4
 max_rounds = 10
