@@ -277,11 +277,14 @@ class Trial(Page):
     
     def is_displayed(player: Player):
         return player.round_number == 1
-    
 
 
 class RandomLines(Page):
     timeout_seconds = C.NOODLE_TIME
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return not (player.should_wait and player.game_over)
 
 
 class WaitForStartGame(WaitPage):
