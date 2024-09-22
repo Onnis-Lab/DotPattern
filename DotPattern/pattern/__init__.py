@@ -283,6 +283,10 @@ class Trial(Page):
 class RandomLines(Page):
     timeout_seconds = C.NOODLE_TIME
 
+    @staticmethod
+    def is_displayed(player: Player):
+        return not (player.should_wait or player.game_over)
+
 
 class WaitForStartGame(WaitPage):
     @staticmethod
