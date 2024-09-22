@@ -6,7 +6,7 @@
 
 <p>Vi skal spille et morsomt spill hvor du får huske et mønster og gjenskape det ved å sette klistremerker på de riktige rutene!</p>
 <p>Se nøye på mønsteret du får se, for du må huske det for å lage det på riktig måte.</p>
-<p> Du skal ha 10 sekunder på å huske mønsteret og 60 sekunder på å gjenskape det.</p>
+<p>Du skal ha 10 sekunder på å huske mønsteret og 60 sekunder på å gjenskape det.</p>
 <p>Når du er klar, trykk på "Next" for å begynne oppgaven.</p>
 
 <p>Velg den fargen du liker best for mønsteret før vi går videre:</p>
@@ -20,5 +20,39 @@
 <p>Etter å ha valgt farge, klikk "Next" for å fortsette.</p>
 
 {{ next_button }}
+
+<!-- Add a script to validate the color selection and handle the next button -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const colorPicker = document.getElementById('colorPicker');
+        const form = document.querySelector('form');
+        const nextButton = document.querySelector('button[type="submit"]');
+
+        function validateColor() {
+            const selectedColor = colorPicker.value.toUpperCase();
+            // Check if the selected color is too close to white
+            if (selectedColor === 'FFFFFF' || selectedColor === '#FFFFFF') {
+                alert('Vennligst velg en annen farge enn hvit, så mønsteret ditt blir synlig.');
+                nextButton.disabled = true;  // Disable the "Next" button
+            } else {
+                nextButton.disabled = false; // Enable the "Next" button
+            }
+        }
+
+        // Run validation when the color picker value changes
+        colorPicker.addEventListener('input', validateColor);
+
+        // Run validation on form submit
+        form.addEventListener('submit', function(event) {
+            validateColor();
+            if (nextButton.disabled) {
+                event.preventDefault();  // Prevent form submission if color is invalid
+            }
+        });
+
+        // Disable the "Next" button initially
+        nextButton.disabled = true;
+    });
+</script>
 
 {{ endblock }}
