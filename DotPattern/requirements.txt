@@ -1,5 +1,5 @@
 # oTree-may-not-overwrite-this-file
-otree>=5.0.0a21
+otree>=5.10.0
 psycopg2>=2.8.4
 matplotlib==3.8.1
 networkx==3.1
