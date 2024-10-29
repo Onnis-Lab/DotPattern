@@ -1,0 +1,24 @@
+{{ block title }} 
+    Instruksjoner
+{{ endblock }}
+
+{{ block content }}
+
+<p>Vi skal spille et morsomt spill hvor du får huske et mønster og gjenskape det ved å sette klistremerker på de riktige rutene!</p>
+<p>Se nøye på mønsteret du får se, for du må huske det for å lage det på riktig måte.</p>
+<p> Du skal ha 10 sekunder på å huske mønsteret og 60 sekunder på å gjenskape det.</p>
+<p>Når du er klar, trykk på "Next" for å begynne oppgaven.</p>
+
+<p>Velg den fargen du liker best for mønsteret før vi går videre:</p>
+
+<!-- Include jscolor library -->
+<script src="https://jscolor.com/release/2.4.5/jscolor.js"></script>
+
+<!-- Color picker input tied to the player's form field -->
+<input class="jscolor" id="colorPicker" name="selected_color" value="{{ player.selected_color }}" />
+
+<p>Etter å ha valgt farge, klikk "Next" for å fortsette.</p>
+
+{{ next_button }}
+
+{{ endblock }}

@@ -18,6 +18,7 @@ is_ws = False
 nodes = 8 # number of participants
 neighbours = 4
 max_rounds = 10
+la = 'no'
 ########################################
 
 class C(BaseConstants):
@@ -174,7 +175,7 @@ def get_comparison_results(player):
 #     return pattern_mat
 
 # PAGES
-class Instructions(Page):
+class Instructions_no(Page):
     form_model = 'player'
     form_fields = ['selected_color']
 
@@ -202,7 +203,7 @@ class WaitforRound(WaitPage):
             'wait_time': player.rounds_to_wait * 70
         }
 
-class PatternDisplay(Page):
+class PatternDisplay_no(Page):
     timeout_seconds = C.PATTERN_DISPLAY_TIME  # Seconds
 
     @staticmethod
@@ -219,7 +220,7 @@ class PatternDisplay(Page):
         return not (player.should_wait or player.game_over)
 
 
-class Reproduce(Page):
+class Reproduce_no(Page):
     form_model = 'player'
     form_fields = ['reproduced_pattern']
 
@@ -243,7 +244,7 @@ class Reproduce(Page):
     def is_displayed(player: Player):
         return not (player.should_wait or player.game_over)
     
-class Results(Page):
+class Results_no(Page):
     @staticmethod
     def vars_for_template(player):
         correctness, assigned_pattern, reproduced_pattern = get_comparison_results(player)
@@ -259,7 +260,7 @@ class Results(Page):
     def is_displayed(player: Player):
         return not (player.should_wait or player.game_over)
 
-class Trial(Page):
+class Trial_no(Page):
     form_model = 'player'
     form_fields = ['reproduced_pattern']
 
@@ -280,7 +281,7 @@ class Trial(Page):
     
 
 
-class RandomLines(Page):
+class RandomLines_no(Page):
     timeout_seconds = C.NOODLE_TIME
 
     @staticmethod
@@ -306,32 +307,170 @@ class ShuffleWaitPage(WaitPage):
         subsession.reassign_patterns()
 
 
-class GameOver(Page):
+class GameOver_no(Page):
     @staticmethod
     def is_displayed(player):
         return player.round_number == C.NUM_ROUNDS
 
-if DEBUG:
-    page_sequence = [
-        Instructions,
-        WaitForStartGame,
-        ShuffleWaitPage,
-        WaitforRound,
-        PatternDisplay,
-        Reproduce,
-        Results,
-        GameOver,  
-    ]
-else:
-    page_sequence = [
-        Instructions,
-        Trial,
-        WaitForStartGame,
-        ShuffleWaitPage,
-        WaitforRound,
-        PatternDisplay,
-        RandomLines, 
-        Reproduce,
-        Results,
-        GameOver,  
-    ]
+class Instructions_en(Page):
+    form_model = 'player'
+    form_fields = ['selected_color']
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
+    
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        player.participant.selected_color = player.selected_color
+
+class WaitforRound_en(WaitPage):
+    @staticmethod
+    def is_displayed(player):
+        return player.should_wait  # Display the wait page if the player should wait
+
+    @staticmethod
+    def get_timeout_seconds(player):
+        return player.rounds_to_wait * 70  # 10 display + 60 reproduce
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'message': f"Vennligst vent {player.rounds_to_wait }runde(r) før neste kamp.",
+            'wait_time': player.rounds_to_wait * 70
+        }
+
+class PatternDisplay_en(Page):
+    timeout_seconds = C.PATTERN_DISPLAY_TIME  # Seconds
+
+    @staticmethod
+    def vars_for_template(player):
+        matrix = set_random_pattern(player)
+        print(f"matrix {matrix}")
+        return {
+            'matrix': matrix.tolist(),
+            'selected_color': player.participant.selected_color,
+        }
+    
+    @staticmethod
+    def is_displayed(player: Player):
+        return not (player.should_wait or player.game_over)
+
+
+class Reproduce_en(Page):
+    form_model = 'player'
+    form_fields = ['reproduced_pattern']
+
+    @staticmethod
+    def vars_for_template(player):
+        size = C.PATTERN_SIZE
+        return {
+            'pattern_size': range(size),
+            'size_value': size,
+            'n_dots': C.N_DOTS,
+            'selected_color': player.participant.selected_color,
+            'reproduce_time': C.REPRODUCE_TIME,
+        }
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        reproduced_pattern = player.reproduced_pattern.split(',')
+        # selected_dots = sum(1 for dot in reproduced_pattern if dot == '1')
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return not (player.should_wait or player.game_over)
+    
+class Results_en(Page):
+    @staticmethod
+    def vars_for_template(player):
+        correctness, assigned_pattern, reproduced_pattern = get_comparison_results(player)
+        return {
+            'accuracy': correctness,
+            'original_pattern': assigned_pattern.tolist(),
+            'reproduced_pattern': reproduced_pattern.tolist(),
+            'selected_color': player.participant.selected_color,
+            "n_dots": C.N_DOTS,
+        }
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return not (player.should_wait or player.game_over)
+
+class Trial_en(Page):
+    form_model = 'player'
+    form_fields = ['reproduced_pattern']
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        size = 3
+        return {
+            'matrix': C.TEST_MATRIX.tolist(),
+            'flat_matrix': C.TEST_MATRIX.flatten().tolist(),
+            'pattern_size': range(size),
+            'size_value': size,
+            'n_dots': 4,
+            'selected_color': player.participant.selected_color
+        }
+    
+    def is_displayed(player: Player):
+        return player.round_number == 1
+    
+
+
+class GameOver_en(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == C.NUM_ROUNDS
+
+if la == 'no':
+    if DEBUG:
+        page_sequence = [
+            Instructions_no,
+            WaitForStartGame,
+            ShuffleWaitPage,
+            WaitforRound_no,
+            PatternDisplay_no,
+            Reproduce_no,
+            Results_no,
+            GameOver_no,  
+        ]
+    else:
+        page_sequence = [
+            Instructions_no,
+            Trial_no,
+            WaitForStartGame,
+            ShuffleWaitPage,
+            WaitforRound_no,
+            PatternDisplay_no,
+            # RandomLines, 
+            Reproduce_no,
+            Results_no,
+            GameOver_no,  
+        ]
+
+elif la == 'en':
+    if DEBUG:
+        page_sequence = [
+            Instructions_en,
+            WaitForStartGame,
+            ShuffleWaitPage,
+            WaitforRound_en,
+            PatternDisplay_en,
+            Reproduce_en,
+            Results_en,
+            GameOver_en,  
+        ]
+    else:
+        page_sequence = [
+            Instructions_en,
+            Trial_en,
+            WaitForStartGame,
+            ShuffleWaitPage,
+            WaitforRound_en,
+            PatternDisplay_en,
+            # RandomLines, 
+            Reproduce_en,
+            Results_en,
+            GameOver_en,  
+        ]

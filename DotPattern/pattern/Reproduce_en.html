@@ -1,0 +1,122 @@
+{{ block title }} 
+    Reproduce the pattern 
+{{ endblock }}
+
+{{ block content }}
+<p>Remaining time: <span id="countdown">{{ reproduce_time }}</span> second(s)</p>
+<!-- Form element to wrap the content that needs to be submitted -->
+<p> What was the pattern? Click on the squares that made up the pattern. </p>
+<p> If you don't remember, try to guess. </p>
+<form method="post">
+    <div id="grid" style="display: flex; flex-direction: column;">
+        {% for row in pattern_size %}
+            <div style="display: flex;">
+                {% for col in pattern_size %}
+                    <div class="square" data-position="{{ row }},{{ col }}" style="width: 50px; height: 50px; border: 1px solid black; background-color: white; margin: 1px; cursor: pointer;"></div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Hidden input field to store the pattern -->
+    <input type="hidden" id="reproduced_pattern" name="reproduced_pattern">
+    <button id="custom-next-button" type="button" disabled>Next</button>
+</form>
+
+<div>
+    You must have {{ n_dots }} squares before you can press <b>"Next"</b>.
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const sizeValue = {{ size_value }};
+        const dotsRequired = {{ n_dots }};
+        const totalSquares = sizeValue * sizeValue;
+        let reproducedPattern = new Array(totalSquares).fill(0);  
+        let dotsSelected = 0;
+
+        const squares = document.querySelectorAll(".square");
+        const nextButton = document.getElementById('custom-next-button');
+        const form = document.querySelector('form'); 
+        const selectedColor = "{{ selected_color }}";
+
+        if (nextButton) {
+            nextButton.disabled = true;  // Disable the button initially
+            console.log("nextButton ok");
+        } else {
+            console.error("nextButton not found");
+        }
+
+        // Function to convert hex color to rgb format
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // Convert selectedColor to rgb format for comparison
+        const selectedColorRgb = hexToRgb(selectedColor);
+
+        squares.forEach(square => {
+            square.addEventListener("click", function() {
+                const position = square.getAttribute('data-position');
+                const [row, col] = position.split(',').map(Number);
+                const index = row * sizeValue + col;
+
+                // Get the current background color of the square in rgb format
+                const currentColor = window.getComputedStyle(square).backgroundColor;
+
+                // Toggle the square's color based on current color
+                if (currentColor === selectedColorRgb) {
+                    square.style.backgroundColor = "white";
+                    reproducedPattern[index] = 0;
+                    dotsSelected--;
+                } else {
+                    square.style.backgroundColor = selectedColor;
+                    reproducedPattern[index] = 1;
+                    dotsSelected++;
+                }
+
+                // Update the hidden input field
+                document.getElementById("reproduced_pattern").value = reproducedPattern.join(',');
+
+                // Enable/disable the next button
+                nextButton.disabled = dotsSelected !== dotsRequired;
+            });
+        });
+
+        // Handle form submission when the custom button is clicked
+        nextButton.addEventListener("click", function() {
+            if (dotsSelected === dotsRequired) {
+                // Submit the form
+                form.submit();
+            } else {
+                console.error("Conditions not met for form submission.");
+            }
+        });
+
+        // Initialize the hidden input field
+        document.getElementById("reproduced_pattern").value = reproducedPattern.join(',');
+
+        // Countdown timer logic
+        let timeLeft = 60;  // 60 seconds countdown
+        const countdownElement = document.getElementById('countdown');
+
+        const countdownInterval = setInterval(function() {
+            timeLeft--;
+            countdownElement.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                alert("Time has run out. Please make your decision.");
+                // Optionally, you could automatically submit the form here:
+                // form.submit();
+            }
+        }, 1000);  // Update every second
+
+    });
+</script>
+
+{{ endblock }}

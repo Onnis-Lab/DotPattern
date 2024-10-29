@@ -1,0 +1,23 @@
+{{ block title }}
+    Remember this pattern
+{{ endblock }}
+
+{{ block content }}
+
+<div style="display: flex; flex-direction: column;">
+    {% for row in matrix %}
+        <div style="display: flex;">
+            {% for value in row %}
+                {% if value == 1 %}
+                    <!-- Use the selected color for the squares that should be filled -->
+                    <div style="width: 50px; height: 50px; border: 1px solid black; background-color: {{ selected_color }}; margin: 1px;"></div>
+                {% else %}
+                    <div style="width: 50px; height: 50px; border: 1px solid black; background-color: white; margin: 1px;"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+
+{{ formfields }}
+{{ endblock }}
