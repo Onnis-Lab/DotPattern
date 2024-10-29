@@ -10,7 +10,7 @@ Depending on that, change the SEQUENCES defined below in the constant (C) class.
 """
 
 ###### Change to TRUE before releasing #######
-DEBUG = False
+DEBUG = True
 #############
 
 ######## Experiment Variables #########
@@ -18,7 +18,7 @@ is_ws = False
 nodes = 8 # number of participants
 neighbours = 4
 max_rounds = 10
-la = 'no'
+la = 'en'
 ########################################
 
 class C(BaseConstants):
@@ -31,18 +31,21 @@ class C(BaseConstants):
         PATTERN_SIZE = 3
         N_DOTS = 3
         PATTERN_DISPLAY_TIME = 3
-        N_PARTICIPANTS = 4
+        N_PARTICIPANTS = 3
+        N_NEIGHBOURS = 2
         REPRODUCE_TIME = 5
         NOODLE_TIME = 1
+        INITIAL_PATTERNS = seed_patterns(N_PARTICIPANTS, PATTERN_SIZE, N_DOTS)
+        SEQUENCES = generate_network_sequences(is_ws, N_PARTICIPANTS, N_NEIGHBOURS, max_rounds)
     else:
         PATTERN_SIZE = 10
         N_DOTS = 12
         PATTERN_DISPLAY_TIME = 10
         REPRODUCE_TIME = 60
         NOODLE_TIME = 10
+        INITIAL_PATTERNS = seed_patterns(nodes, PATTERN_SIZE, N_DOTS)
+        SEQUENCES = generate_network_sequences(is_ws, nodes, neighbours, max_rounds)
 
-    INITIAL_PATTERNS = seed_patterns(nodes, PATTERN_SIZE, N_DOTS)
-    SEQUENCES = generate_network_sequences(is_ws, nodes, neighbours, max_rounds)
     # print(SEQUENCES[1:].flatten())
     print(SEQUENCES)
     NUM_ROUNDS = len(SEQUENCES)

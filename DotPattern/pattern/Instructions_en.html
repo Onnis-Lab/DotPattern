@@ -1,15 +1,15 @@
 {{ block title }} 
-    Instruksjoner
+    Instructions
 {{ endblock }}
 
 {{ block content }}
 
-<p>Vi skal spille et morsomt spill hvor du får huske et mønster og gjenskape det ved å sette klistremerker på de riktige rutene!</p>
-<p>Se nøye på mønsteret du får se, for du må huske det for å lage det på riktig måte.</p>
-<p> Du skal ha 10 sekunder på å huske mønsteret og 60 sekunder på å gjenskape det.</p>
-<p>Når du er klar, trykk på "Next" for å begynne oppgaven.</p>
+<p>We are going to play a fun game where you have to remember a pattern and recreate it by placing stickers on the correct squares!</p>
+<p>Look closely at the pattern you will see, because you need to remember it to recreate it correctly.</p>
+<p>You will have 10 seconds to remember the pattern and 60 seconds to recreate it.</p>
+<p>When you are ready, press "Next" to start the task.</p>
 
-<p>Velg den fargen du liker best for mønsteret før vi går videre:</p>
+<p>Choose the color you like best for the pattern before we proceed:</p>
 
 <!-- Include jscolor library -->
 <script src="https://jscolor.com/release/2.4.5/jscolor.js"></script>
@@ -17,7 +17,7 @@
 <!-- Color picker input tied to the player's form field -->
 <input class="jscolor" id="colorPicker" name="selected_color" value="{{ player.selected_color }}" />
 
-<p>Etter å ha valgt farge, klikk "Next" for å fortsette.</p>
+<p>After choosing a color, click "Next" to continue.</p>
 
 {{ next_button }}
 
